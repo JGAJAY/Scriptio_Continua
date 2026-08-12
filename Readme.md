@@ -1,47 +1,71 @@
-# Dictionary-Based Semantic Trie Engine
+# Scriptio Continua: Word Segmentation Framework
 
-This module provides a deterministic alternative to word segmentation using a high-precision Trie-based engine. It validates alphanumeric strings against millions of verified linguistic records to ensure semantic correctness.
-
-## Contents
-
-*   **`dict/universal_trie.py`**: The core engine. It manages the Trie structure, loads dictionaries, and performs semantic analysis.
-*   **`dict/*.txt` / `dict/*.csv`**: Linguistic datasets used for verification, including Moby Part-of-Speech, Web Words, and English definitions.
-*   **`SENT_based_split.xlsx`**: Ground truth data used to validate the Trie's segmentation performance.
+**Scriptio Continua** is a comprehensive research project designed to solve the automated word segmentation problem for continuous character strings in English. This framework evaluates and compares modern **Deep Learning Sequence Tagging** architectures, **Dictionary-Driven Semantic Trie validation**, and **Few-Shot Large Language Model (LLM)** prompting.
 
 ---
 
-## Methodology
+## 🚀 Key Features
 
-### 1. High-Precision Semantic Trie (`UniversalTrie`)
-Unlike standard Tries that only check for the existence of a word, this engine implements a **Strict Semantic Verification** policy:
-*   **POS Verification**: A word is only "Accepted" if it is mapped to a valid Part-of-Speech tag (e.g., Noun, Verb, Adjective).
-*   **Lexical Mapping**: The engine verifies word candidates against definitions to confirm semantic identity.
-*   **Trie Architecture**: Uses `__slots__` and efficient dictionary-based branching to manage millions of words with minimal memory overhead.
-
-### 2. Multi-Dataset Integration
-The engine builds its internal model by merging several diverse data sources:
-1.  **Lexical Definitions**: Loads definitions from `english_dictionary.csv`.
-2.  **Grammatical Specificity**: Integrates Moby POS data for morphological verification.
-3.  **Background Vocabulary**: Uses large-scale frequency lists (`web_words_1M.txt`) for indexing, but rejects them if they lack specific semantic metadata.
-
-### 3. Pattern-Based Fallback
-To handle entities not typically found in a dictionary, the engine includes high-precision regex patterns for:
-*   **URLs/Web Links**
-*   **Date Formats**
-*   **Currency & Financial Values**
-*   **Numerical Data**
+- **Automated Data Pipeline**: Multi-domain Wikipedia scraper with built-in deduplication (SHA256) and character-level transformation.
+- **Neural Segmentation Suite**: Character-level sequence labeling models including BiLSTM, CNN, CRF, GRU, and RNN.
+- **LLM Few-Shot Pipeline**: Leverages models like Qwen and Gemma via Ollama for direct restoration and state labeling without fine-tuning.
+- **Semantic Validation Engine**: A high-precision Trie that verifies word candidates against lexical definitions and Part-of-Speech (POS) tags.
+- **Dual Labeling Schemes**: Support for both Binary (Boundary/Non-boundary) and BIES (Begin, Inside, End, Single) tagging.
+- **Exhaustive Benchmarking**: Rigorous evaluation using standard NLP metrics: BLEU, METEOR, ROUGE-L, and BERTScore.
 
 ---
 
-## How to Run
+## 📂 Project Architecture
 
-### Interactive Analysis
-Navigate to the `dict/` subfolder and run the engine:
+- **`DATASET/`**: Automated data generation and ETL (Scraping, Transformation, Statistics).
+- **`dict based model/`**: Algorithmic module using a Semantic Trie engine and various word-likelihood validators (orthographic, phonotactic, pronounceability).
+- **`Models/`**: Deep Learning module containing plain neural networks (BiLSTM, GRU, etc.) and CRF-enhanced architectures.
+- **`LLM based/`**: Few-shot prompting pipeline for word segmentation using Large Language Models via Ollama.
+- **`Literature survey/`**: Collection of research papers and reports related to word segmentation and scriptio continua.
+- **`extras/`**: Utility scripts for generating metrics and processing workbooks.
+- **`scripts/`**: Miscellaneous automation and utility scripts.
+
+---
+
+## 🛠️ Technical Stack
+
+- **Core**: Python 3.8+
+- **Deep Learning**: PyTorch, TensorFlow/Keras
+- **LLM Interface**: Ollama
+- **Data Analysis**: Pandas, NumPy, OpenPyXL
+- **Natural Language Processing**: NLTK, BeautifulSoup4, `bert-score`, `wordfreq`, `g2p_en`
+- **Scraping & Utilities**: Requests, TQDM, Hashlib
+
+---
+
+## 🏃 Getting Started
+
+### 1. Installation
 ```bash
-python universal_trie.py
-```
-*   **Input**: Enter any string or sequence of characters.
-*   **Output**: The engine will return if the string is "Accepted," its verified Part-of-Speech types, and its primary definitions.
+# Clone the repository
+git clone https://github.com/Vallurikeerthiram/ScriptioContinua.git
+cd ScriptioContinua
 
-### Automated Validation
-The engine can be integrated into a word segmentation pipeline by recursively checking substrings in a "Scriptio Continua" string to identify valid semantic boundaries.
+# Install dependencies
+pip install torch pandas requests beautifulsoup4 nltk bert-score openpyxl wordfreq g2p_en
+```
+
+### 2. End-to-End Pipeline
+1.  **Scrape**: Run `python DATASET/pullArticles.py` to build the raw corpus.
+2.  **Preprocess**: Run `python DATASET/Preprocessing.py` to create the Scriptio Continua dataset.
+3.  **Train DL Models**: Navigate to `Models/plain DL models/` or `Models/DL models_CRF/` and run the respective training scripts.
+4.  **Run LLM Pipeline**: Navigate to `LLM based/` and use the `run_typeX.py` scripts with Ollama.
+5.  **Dictionary Validation**: Explore `dict based model/valid word finder/` for dictionary and pronounceability-based segmentation.
+
+---
+
+## 📊 Evaluation Metrics Benchmarking
+
+The project benchmarks all models against:
+- **Sequence Metrics**: Accuracy, Precision, Recall, and F1-Score of the predicted labels.
+- **Reconstruction Metrics**: 
+    - **BLEU / ROUGE / METEOR**: Overlap and alignment between reconstructed and original text.
+    - **BERTScore**: Semantic similarity using contextual embeddings.
+
+---
+**Maintained by:** [Valluri Keerthi Ram](https://github.com/Vallurikeerthiram)
